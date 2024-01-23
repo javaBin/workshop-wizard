@@ -13,11 +13,12 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun server() = embeddedServer(factory = Netty, port = 8080) {
-    createServer()
-}
+fun server() =
+    embeddedServer(factory = Netty, port = 8080) {
+        createServer()
+    }
 
-private fun Application.createServer() {
+fun Application.createServer() {
     runMigration()
     configureAuth()
     configureRouting()
@@ -39,7 +40,6 @@ fun Application.configureAuth() {
         }
     }
 }
-
 
 fun Application.configureRouting() {
     val userRepository = UserRepository()

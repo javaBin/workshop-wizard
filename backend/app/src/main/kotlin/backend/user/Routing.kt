@@ -23,10 +23,18 @@ fun Routing.userRoutes(userRepository: UserRepository) {
         post("/user/workshop/{workshopId}") {
             try {
                 val userId = call.authentication.principal<CustomPrincipal>()?.userId!!
-                userRepository.addWorkshopRegistrations(userId, call.parameters["workshopId"]!!.toInt())
+                val workshopId = call.parameters["workshopId"]!!.toInt()
+                val workshopRegistration =
+                    RegisteredWorkshops(userRepository).registerAttendance(
+                        user = userRepository.userMap[userId]!!,
+                        workshop = userRepository.workshopMap[workshopId]!!,
+                    )
                 call.respondText("Workshop added")
             } catch (e: Exception) {
-                call.respondText("Workshop not found", status = io.ktor.http.HttpStatusCode.NotFound)
+                call.respondText(
+                    "Could not add workshop for some reason",
+                    status = io.ktor.http.HttpStatusCode.InternalServerError,
+                )
             }
         }
 
