@@ -1,7 +1,7 @@
 package backend.user
 
 import backend.CustomPrincipal
-import backend.ViewRegisteredWorkshops
+import backend.RegisteredWorkshops
 import backend.domain.User
 import backend.domain.Workshop
 import backend.domain.WorkshopRegistration
@@ -15,7 +15,7 @@ fun Routing.userRoutes(userRepository: UserRepository) {
         get("/user/workshop") {
             // Should be based on the logged in user
             val userId = call.authentication.principal<CustomPrincipal>()?.userId!!
-            val workshopRegistrations = ViewRegisteredWorkshops(userRepository).viewRegisteredWorkshops(userId)
+            val workshopRegistrations = RegisteredWorkshops(userRepository).viewRegisteredWorkshops(userId)
             val workshopRegistrationsDTO = workshopRegistrations.map { WorkshopRegistrationDTO.fromDomain(it) }
             call.respond(workshopRegistrationsDTO)
         }

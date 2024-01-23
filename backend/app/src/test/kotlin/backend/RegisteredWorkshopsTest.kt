@@ -9,7 +9,7 @@ import backend.user.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class ViewRegisteredWorkshopsTest {
+class RegisteredWorkshopsTest {
     @Test
     fun `When there is nothing registered, we get an empty list of registered workshops`() {
         val workshopRegistrationMap = mutableMapOf<Int, WorkshopRegistration>()
@@ -17,9 +17,9 @@ class ViewRegisteredWorkshopsTest {
         val workshopMap = mutableMapOf<Int, Workshop>()
         val userRepository =
             UserRepository(userMap = userMap, registrationMap = workshopRegistrationMap, workshopMap = workshopMap)
-        val viewRegisteredWorkshops = ViewRegisteredWorkshops(userRepository)
+        val registeredWorkshops = RegisteredWorkshops(userRepository)
 
-        val workshops = viewRegisteredWorkshops.viewRegisteredWorkshops(1)
+        val workshops = registeredWorkshops.viewRegisteredWorkshops(1)
 
         assertEquals(0, workshops.size)
     }
@@ -40,9 +40,9 @@ class ViewRegisteredWorkshopsTest {
             )
         val userRepository =
             UserRepository(userMap = userMap, registrationMap = workshopRegistrationMap, workshopMap = workshopMap)
-        val viewRegisteredWorkshops = ViewRegisteredWorkshops(userRepository)
+        val registeredWorkshops = RegisteredWorkshops(userRepository)
 
-        val workshops = viewRegisteredWorkshops.viewRegisteredWorkshops(1)
+        val workshops = registeredWorkshops.viewRegisteredWorkshops(1)
 
         assertEquals(1, workshops.size)
         assertEquals(WorkshopRegistrationState.APPROVED, workshops[0].state)
@@ -68,9 +68,9 @@ class ViewRegisteredWorkshopsTest {
             )
         val userRepository =
             UserRepository(userMap = userMap, registrationMap = workshopRegistrationMap, workshopMap = workshopMap)
-        val viewRegisteredWorkshops = ViewRegisteredWorkshops(userRepository)
+        val registeredWorkshops = RegisteredWorkshops(userRepository)
 
-        val workshops = viewRegisteredWorkshops.viewRegisteredWorkshops(1)
+        val workshops = registeredWorkshops.viewRegisteredWorkshops(1)
 
         assertEquals(2, workshops.size)
         val actual1 = workshops.first { it.id == expectedWorkshopRegistration1.id }
