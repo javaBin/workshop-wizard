@@ -5,6 +5,8 @@ import backend.RegisteredWorkshops
 import backend.domain.User
 import backend.domain.Workshop
 import backend.domain.WorkshopRegistration
+import io.ktor.http.HttpStatusCode.Companion.Conflict
+import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
@@ -31,9 +33,16 @@ fun Routing.userRoutes(userRepository: UserRepository) {
                     )
                 call.respondText("Workshop added")
             } catch (e: Exception) {
+                if (e.message == "User already registered for this workshop") {
+                    call.respondText(
+                        "User already registered for this workshop",
+                        status = Conflict,
+                    )
+                    return@post
+                }
                 call.respondText(
                     "Could not add workshop for some reason",
-                    status = io.ktor.http.HttpStatusCode.InternalServerError,
+                    status = InternalServerError,
                 )
             }
         }

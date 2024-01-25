@@ -33,6 +33,8 @@ fun Application.configureAuth() {
             validate { credentials ->
                 if (credentials.name == "user" && credentials.password == "password") {
                     CustomPrincipal(1)
+                } else if (credentials.name == "user2" && credentials.password == "password") {
+                    CustomPrincipal(2)
                 } else {
                     null
                 }
