@@ -1,4 +1,4 @@
-package backend.domain
+package backend.model
 
 class WorkshopRegistration(
     val id: Int,

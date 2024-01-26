@@ -1,0 +1,20 @@
+ktor:
+  application:
+    modules:
+      - backend.AppKt.module
+  development: true
+  deployment:
+    port: 8080
+
+database:
+  embedded: true
+  host: localhost
+  port: 5432
+  databaseName: workshop
+  user: postgres
+  password: example
+
+
+auth0:
+  issuer: 'https://damoad.eu.auth0.com/'
+  audience: workshop-wizard

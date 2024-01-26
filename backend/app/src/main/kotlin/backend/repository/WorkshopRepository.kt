@@ -1,9 +1,9 @@
-package backend.workshop
+package backend.repository
 
-import backend.domain.Workshop
+import backend.model.Workshop
 
 
-class Repository {
+class WorkshopRepository {
     var map = mutableMapOf<Int, Workshop>(
         1 to Workshop(1, "Kotlin", "John Doe"),
         2 to Workshop(2, "Ktor", "Jane Doe"),

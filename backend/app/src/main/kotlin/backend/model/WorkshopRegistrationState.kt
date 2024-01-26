@@ -1,4 +1,4 @@
-package backend.domain
+package backend.model
 
 
 enum class WorkshopRegistrationState {
