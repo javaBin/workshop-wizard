@@ -22,7 +22,6 @@ repositories {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-sessions-jvm:2.3.6")
     val ktor_version = "2.3.6"
     val logback_version = "1.4.11"
     val slf4j_version = "2.0.9"
@@ -31,16 +30,14 @@ dependencies {
     val flyway_version = "10.6.0"
     val hikari_version = "5.1.0"
     val postgres_version = "42.7.1"
+    val exposed_version = "0.41.1"
+    val h2_version = "2.1.214"
 
     // Use the Kotlin JUnit 5 integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
     // Use the JUnit 5 integration.
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
-
-    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
 
     runtimeOnly("ch.qos.logback:logback-classic:$logback_version")
@@ -49,13 +46,37 @@ dependencies {
 
     // Auth
     implementation("io.ktor:ktor-server-auth:$ktor_version")
-    implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-sessions:$ktor_version")
+    implementation("io.ktor:ktor-server-auth:jvm$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
 
+    // Ktor server dependencies
+    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-resources:$ktor_version")
+    implementation("io.ktor:ktor-server-metrics-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-config-yaml:$ktor_version")
+    implementation("io.ktor:ktor-server-cors-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-sessions-jvm:$ktor_version")
+
+
+    //Ktor client dependencies
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-java:$ktor_version")
+    implementation("io.ktor:ktor-client-encoding:$ktor_version")
 
     // Serialization
-    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation-jvm:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
+
+    // Logging
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
+    implementation("ch.qos.logback:logback-classic:$logback_version")
+
+    // Auth
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
 
     // Kotlin Query
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
@@ -66,7 +87,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core - database migrations
     implementation("org.flywaydb:flyway-core:$flyway_version")
     implementation("org.flywaydb:flyway-database-postgresql:$flyway_version")
-
+    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("com.h2database:h2:$h2_version")
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP - connection pooling
     implementation("com.zaxxer:HikariCP:$hikari_version")
     // https://mvnrepository.com/artifact/org.postgresql/postgresql - database driver

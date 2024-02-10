@@ -5,7 +5,7 @@ import backend.domain.User
 import backend.domain.Workshop
 import backend.domain.WorkshopRegistration
 import backend.domain.WorkshopRegistrationState
-import backend.user.UserRepository
+import backend.repository.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

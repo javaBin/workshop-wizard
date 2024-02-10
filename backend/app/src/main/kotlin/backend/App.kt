@@ -1,43 +1,32 @@
 package backend
 
-import backend.admin.AdminRepository
-import backend.admin.adminRoutes
-import backend.user.UserRepository
-import backend.user.userRoutes
+import backend.config.configureAuth
+import backend.route.adminRoutes
+import backend.route.userRoutes
+import backend.repository.AdminRepository
+import backend.repository.UserRepository
+import com.inventy.plugins.DatabaseFactory
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun server() = embeddedServer(factory = Netty, port = 8080) {
-    createServer()
-}
 
-private fun Application.createServer() {
-    runMigration()
+fun main(args: Array<String>): Unit =
+    io.ktor.server.netty.EngineMain.main(args)
+
+fun Application.module() {
+    DatabaseFactory(
+        dbHost = environment.config.property("database.host").getString(),
+        dbPort = environment.config.property("database.port").getString(),
+        dbUser = environment.config.property("database.user").getString(),
+        dbPassword = environment.config.property("database.password").getString(),
+        databaseName = environment.config.property("database.databaseName").getString(),
+        embedded = environment.config.property("database.embedded").getString().toBoolean(),
+    ).init()
     configureAuth()
     configureRouting()
-}
-
-class CustomPrincipal(val userId: Int) : Principal
-
-fun Application.configureAuth() {
-    authentication {
-        basic(name = "basic") {
-            realm = "Ktor Server"
-            validate { credentials ->
-                if (credentials.name == "user" && credentials.password == "password") {
-                    CustomPrincipal(1)
-                } else {
-                    null
-                }
-            }
-        }
-    }
 }
 
 
@@ -50,7 +39,7 @@ fun Application.configureRouting() {
     }
     routing {
         userRoutes(userRepository)
-        adminRoutes(adminRepository)
+        adminRoutes(adminRepository, userRepository)
         healthz()
 
         get {
@@ -69,6 +58,3 @@ private fun Routing.healthz() {
     }
 }
 
-fun main() {
-    server().start(wait = true)
-}

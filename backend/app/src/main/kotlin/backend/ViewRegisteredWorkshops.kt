@@ -1,7 +1,7 @@
 package backend
 
-import backend.domain.WorkshopRegistration
-import backend.user.UserRepository
+import backend.model.WorkshopRegistration
+import backend.repository.UserRepository
 
 class ViewRegisteredWorkshops(private val userRepository: UserRepository) {
     fun viewRegisteredWorkshops(userId: Int): List<WorkshopRegistration> {
