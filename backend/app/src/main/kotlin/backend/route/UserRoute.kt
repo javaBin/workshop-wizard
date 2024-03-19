@@ -34,7 +34,7 @@ fun Routing.userRoutes(userRepository: UserRepository) {
         }
     }
 
-    put("/user/workshop/{workshopId}/cancel") {
+    put("/user/workshop/{workshopId}/:cancel") {
         val userId = call.authentication.principal<CustomPrincipal>()?.userId!!
         userRepository.cancelWorkshopRegistration(userId, call.parameters["workshopId"]!!.toInt())
         call.respondText("Workshop cancelled")

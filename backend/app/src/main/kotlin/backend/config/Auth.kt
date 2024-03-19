@@ -33,7 +33,11 @@ fun Application.configureAuth() {
         .build()
 
     install(Authentication) {
-        jwt("auth0") {
+        jwt("auth0-user") {
+            verifier(jwkProvider, issuer)
+            validate { credential -> validateCreds(credential) }
+        }
+        jwt("auth0-admin") {
             verifier(jwkProvider, issuer)
             validate { credential -> validateCreds(credential) }
         }
