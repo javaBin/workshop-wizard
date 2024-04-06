@@ -1,7 +1,6 @@
 package backend.route
 
 import backend.dto.UserDTO
-import backend.repository.ProviderRepository
 import backend.repository.UserRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -10,20 +9,32 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.configureAuth0Route(userRepository: UserRepository, providerRepository: ProviderRepository) {
+fun Application.configureAuth0Route(userRepository: UserRepository) {
     routing {
-        auth0Route(userRepository, providerRepository)
+        auth0Route(userRepository)
     }
 }
 
-fun Route.auth0Route(userRepository: UserRepository, providerRepository: ProviderRepository) {
+fun Route.auth0Route(userRepository: UserRepository) {
     authenticate ("basic-auth0") {
+        get("/auth0{email}") {
+            val email = call.parameters["email"]
+            if (email == null) {
+                call.respond(HttpStatusCode.BadRequest, "Missing email parameter: requiredParam")
+                return@get
+            }
+            val userDTO = userRepository.readByEmail(email)
+            if (userDTO != null) {
+                call.respond(true)
+            } else {
+                call.respond(false)
+            }
+        }
         post("/auth0") {
             val userDTO = call.receive<UserDTO>()
             val user = userRepository.readByEmail(userDTO.email)
             if (user?.id != null) {
-                providerRepository.updateProvidersForUser(user.id, userDTO.providers)
-                call.respond(HttpStatusCode.OK)
+                call.respond(HttpStatusCode.Conflict, "User already exists")
                 return@post
             } else {
                 val create = userRepository.create(userDTO)

@@ -9,6 +9,5 @@ data class UserDTO(
     val email: String,
     val imageUrl: String,
     val isAdmin: Boolean,
-    val providers: List<ProviderDTO>
 ) : DTO
 

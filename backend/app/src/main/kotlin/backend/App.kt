@@ -3,7 +3,9 @@ package backend
 import backend.config.configureAuth
 import backend.config.configureRouting
 import backend.config.configureSerialization
+import backend.config.defaultClient
 import com.inventy.plugins.DatabaseFactory
+import io.ktor.client.*
 import io.ktor.server.application.*
 
 
@@ -22,7 +24,6 @@ fun Application.module() {
     ).init()
     configureAuth()
     configureRouting()
-
 }
 
 

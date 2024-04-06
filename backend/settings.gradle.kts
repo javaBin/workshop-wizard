@@ -9,5 +9,5 @@ plugins {
     // Apply the foojay-resolver plugin to allow automatic download of JDKs
 }
 
-rootProject.name = "backend"
+rootProject.name = "workshop-wizard.backend"
 include("app")

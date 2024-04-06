@@ -1,4 +1,4 @@
-create table users
+create table "user"
 (
     id         int GENERATED ALWAYS AS IDENTITY primary key,
     first_name varchar,
@@ -8,23 +8,9 @@ create table users
     is_admin   boolean
 );
 
-INSERT INTO users (first_name, last_name, email, is_admin)
+INSERT INTO "user" (first_name, last_name, email, is_admin)
 VALUES
     ('Daud', 'Mohamed', 'daud.mohamed.adam@gmail.com', true);
-
-create table provider
-(
-    id   int GENERATED ALWAYS AS IDENTITY primary key,
-    user_id int,
-    provider_type varchar,
-    provider_id varchar,
-
-    constraint provider_fk_user foreign key (user_id) references users (id)
-);
-
-INSERT INTO provider (user_id, provider_type, provider_id)
-VALUES
-    ('1', 'google', '123');
 
 create table workshop
 (
@@ -56,7 +42,7 @@ create table workshop_registration
     updated_at  timestamp with time zone not null default current_timestamp,
 
     constraint workshop_registration_fk_workshop foreign key (workshop_id) references workshop (id),
-    constraint workshop_registration_fk_user foreign key (user_id) references users (id)
+    constraint workshop_registration_fk_user foreign key (user_id) references "user" (id)
 );
 
 INSERT INTO workshop_registration (user_id, workshop_id, state, created_at, updated_at)

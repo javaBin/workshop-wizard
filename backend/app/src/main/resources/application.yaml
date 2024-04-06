@@ -7,15 +7,15 @@ ktor:
     port: 8080
 
 database:
-  embedded: true
+  embedded: false
   host: localhost
   port: 5432
   databaseName: workshop
-  user: postgres
-  password: example
+  user: workshop
+  password: workshop
 
 
 auth0:
-  issuer: 'https://damoad.eu.auth0.com/'
+  issuer: 'https://test-javabin.eu.auth0.com/'
   # The audience is the identifier of the API that you want to call (client-id of the application in Auth0)
   audience: workshop-wizard-backend

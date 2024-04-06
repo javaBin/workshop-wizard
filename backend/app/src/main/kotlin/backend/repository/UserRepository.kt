@@ -15,17 +15,8 @@ class User(
     val email: String,
     val imageUrl: String,
     val isAdmin: Boolean,
-    var providers: List<Provider>
 ) : Model {
 
-    constructor(
-        id: Int,
-        firstName: String,
-        lastName: String,
-        email: String,
-        imageUrl: String,
-        isAdmin: Boolean
-    ) : this(id, firstName, lastName, email, imageUrl, isAdmin, emptyList())
     fun toDTO(): UserDTO {
         return UserDTO(
             firstName,
@@ -33,7 +24,6 @@ class User(
             email,
             imageUrl,
             isAdmin,
-            providers.map { it.toDTO() },
         )
     }
 }
@@ -53,16 +43,6 @@ class UserRepository{
             it[email],
             it[imageUrl],
             it[isAdmin]
-        )
-
-        fun toModel(it: ResultRow, providers: List<Provider>) = User(
-            it[id].value,
-            it[firstName],
-            it[lastName],
-            it[email],
-            it[imageUrl],
-            it[isAdmin],
-            providers,
         )
 
     }
