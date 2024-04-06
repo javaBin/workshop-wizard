@@ -39,19 +39,4 @@ fun Routing.userRoutes(userRepository: UserRepository) {
         userRepository.cancelWorkshopRegistration(userId, call.parameters["workshopId"]!!.toInt())
         call.respondText("Workshop cancelled")
     }
-    authenticate ("basic-auth0") {
-        post("/user") {
-            val userDTO = call.receive<UserDTO>()
-            val user = userRepository.readByEmail(userDTO.email)
-            if (user?.id != null) {
-                userRepository.updateProviders(user.id, user.providers, userDTO.providers)
-                call.respond(HttpStatusCode.OK)
-                return@post
-            } else {
-                val create = userRepository.create(userDTO)
-                call.respond(HttpStatusCode.Created, create)
-                return@post
-            }
-        }
-    }
 }

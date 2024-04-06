@@ -8,9 +8,9 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.configureWorkshopRoutes(userRepository: UserRepository) {
+fun Application.configureWorkshopRoutes(workshopRepository: WorkshopRepository) {
     routing {
-        userRoutes(userRepository)
+        workshopRoute(workshopRepository)
     }
 }
 
