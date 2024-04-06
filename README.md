@@ -7,7 +7,11 @@ The application for managing workshops of JavaZone. Includes registration, cance
 JDK 21
 Docker (or other container runtime)
 
-To start the application: Go to the backend folder and `gradle app:run` or run it through your favorite editor
+To start the application:
+* Run docker-compose.yml `docker-compose up` in repository root
+* Go to the backend folder and `gradle app:run` or run it through your favorite editor by starting `backend/App.kt`
+
+
 
 ### Frontend
 TBD
