@@ -1,6 +1,7 @@
 package backend.repository
 
 import backend.dto.WorkshopDTO
+import com.inventy.plugins.DatabaseFactory.Companion.dbQuery
 import kotlinx.serialization.Contextual
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ResultRow
@@ -37,10 +38,8 @@ class WorkshopRepository {
             it[capacity]
         )
     }
-    fun list(): List<Workshop> {
-        return transaction {
-            WorkshopTable.selectAll()
-                .map(WorkshopTable::toModel)
-        }
+    suspend fun list(): List<Workshop> = dbQuery {
+        WorkshopTable.selectAll()
+            .map(WorkshopTable::toModel)
     }
 }
