@@ -1,89 +1,95 @@
 package backend.repository
 
 import backend.config.TestData
-import backend.dto.ProviderDTO
 import backend.dto.UserDTO
-import backend.model.Provider
-import backend.model.User
-import backend.model.WorkshopRegistration
-import backend.model.WorkshopRegistrationState
+import com.inventy.plugins.DatabaseFactory.Companion.dbQuery
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
+
+class User(
+    override val id: Int?,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val imageUrl: String,
+    val isAdmin: Boolean,
+    var providers: List<Provider>
+) : Model {
+
+    constructor(
+        id: Int,
+        firstName: String,
+        lastName: String,
+        email: String,
+        imageUrl: String,
+        isAdmin: Boolean
+    ) : this(id, firstName, lastName, email, imageUrl, isAdmin, emptyList())
+    fun toDTO(): UserDTO {
+        return UserDTO(
+            firstName,
+            lastName,
+            email,
+            imageUrl,
+            isAdmin,
+            providers.map { it.toDTO() },
+        )
+    }
+}
 
 class UserRepository{
     val userMap = TestData.userMap
-    val registrationMap = TestData.registrationMap
-    val workshopMap = TestData.workshopMap
 
-    fun create(user: UserDTO): User {
-        val maxId = userMap.keys.max() + 1
-        userMap.put(maxId, User(
-            maxId,
-            user.firstName,
-            user.lastName,
-            user.email,
-            user.imageUrl,
-            mutableListOf(),
-        ))
-        return userMap[maxId]!!
-    }
+    internal object UserTable : IntIdTable() {
+        val firstName = varchar("first_name", 256)
+        val lastName = varchar("last_name", 256)
+        val email = varchar("email", 256)
+        val imageUrl = varchar("image_url", 256)
+        val isAdmin = bool("is_admin")
 
-    fun getUsers(): List<User> {
-        return userMap.values.toList()
-    }
-
-    fun readByEmail(email: String): User? {
-        return userMap.values.firstOrNull { it.email == email }
-    }
-
-    fun updateProviders(userId: Int, existingProviders: List<Provider>, providers: List<ProviderDTO>) {
-        // add provider
-        providers.filter {
-            existingProviders.none { provider -> provider.providerType == it.providerType.id }
-        }.forEach(
-            fun (provider: ProviderDTO) {
-                val maxId = userMap[userId]!!.providers.maxOf { it.id!! } + 1
-                userMap[userId]!!.providers += Provider(
-                    maxId,
-                    userId,
-                    provider.providerType.id,
-                    provider.providerId,
-                )
-            }
+        fun toModel(it: ResultRow) = User(
+            it[id].value,
+            it[firstName],
+            it[lastName],
+            it[email],
+            it[imageUrl],
+            it[isAdmin]
         )
-    }
 
-    fun findProviderById(providerId: String): Provider? {
-        return userMap.values.flatMap { it.providers }.firstOrNull { it.providerId == providerId }
-    }
-    fun getWorkShopRegistrations(userId: Int): List<WorkshopRegistration> {
-        return registrationMap.filter {
-            it.value.user.id == userId
-        }.values.toList()
-    }
-
-    fun addWorkshopRegistrations(
-        userId: Int,
-        workshopId: Int,
-    ) {
-        workshopMap.get(workshopId) ?: throw RuntimeException("Workshop does not exist")
-        val maxId = registrationMap.keys.max() + 1
-        registrationMap.put(
-            maxId,
-            WorkshopRegistration(
-                maxId,
-                userMap[userId]!!,
-                workshopMap[workshopId]!!,
-                WorkshopRegistrationState.PENDING,
-            ),
+        fun toModel(it: ResultRow, providers: List<Provider>) = User(
+            it[id].value,
+            it[firstName],
+            it[lastName],
+            it[email],
+            it[imageUrl],
+            it[isAdmin],
+            providers,
         )
+
     }
 
-    fun cancelWorkshopRegistration(
-        userId: Int,
-        workshopId: Int,
-    ) {
-        val registration =
-            registrationMap.filter { it.value.user.id == userId && it.value.workshop.id == workshopId }
-                .values.firstOrNull() ?: throw RuntimeException("Workshop registration does not exist")
-        registration.state = WorkshopRegistrationState.CANCELED
+    suspend fun create(user: UserDTO): Int = dbQuery {
+        UserTable.insertAndGetId {
+            it[firstName] = user.firstName
+            it[lastName] = user.lastName
+            it[email] = user.email
+            it[imageUrl] = user.imageUrl
+            it[isAdmin] = user.isAdmin
+        }.value
+    }
+
+    suspend fun list(): List<User> = dbQuery {
+        UserTable.selectAll()
+            .map(UserTable::toModel)
+    }
+
+    suspend fun readByEmail(email: String): User? {
+        return dbQuery {
+            UserTable.select { UserTable.email eq email }
+                .map(UserTable::toModel)
+                .firstOrNull()
+        }
     }
 }

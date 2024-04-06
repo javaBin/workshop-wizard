@@ -1,13 +1,7 @@
 package backend.route
 
-import backend.config.CustomPrincipal
-import backend.dto.UserDTO
 import backend.repository.UserRepository
-import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 
@@ -18,7 +12,7 @@ fun Application.configureUserRoutes(userRepository: UserRepository) {
 }
 
 fun Routing.userRoutes(userRepository: UserRepository) {
-    get("/user/workshop") {
+    /*get("/user/workshop") {
         // Should be based on the logged in user
         val userId = call.authentication.principal<CustomPrincipal>()?.userId!!
         call.respond(userRepository.getWorkShopRegistrations(userId))
@@ -38,5 +32,5 @@ fun Routing.userRoutes(userRepository: UserRepository) {
         val userId = call.authentication.principal<CustomPrincipal>()?.userId!!
         userRepository.cancelWorkshopRegistration(userId, call.parameters["workshopId"]!!.toInt())
         call.respondText("Workshop cancelled")
-    }
+    }*/
 }
