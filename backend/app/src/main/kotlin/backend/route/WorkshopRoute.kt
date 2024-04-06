@@ -19,14 +19,6 @@ fun Routing.workshopRoute(workshopRepository: WorkshopRepository) {
         get("/workshop") {
             call.respond(workshopRepository.list().map(Workshop::toDTO))
         }
-        get("/workshop/{workshopId}") {
-            val workshop: Workshop? = workshopRepository.getById(call.parameters["workshopId"]!!.toInt())
-            if (workshop == null) {
-                call.respondText("Workshop not found", status = io.ktor.http.HttpStatusCode.NotFound)
-                return@get
-            }
-            call.respond(workshop)
-        }
     }
 
 }

@@ -43,7 +43,7 @@ fun Application.configureRouting() {
     }
     routing {
         userRoutes(userRepository)
-        adminRoutes(adminRepository, userRepository)
+        adminRoutes()
         workshopRoute(workshopRepository)
         healthz()
 
