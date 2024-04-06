@@ -93,7 +93,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:$flyway_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
-    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposed_version")
     implementation("com.h2database:h2:$h2_version")
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP - connection pooling
     implementation("com.zaxxer:HikariCP:$hikari_version")

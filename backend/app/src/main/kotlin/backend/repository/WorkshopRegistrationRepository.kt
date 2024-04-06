@@ -1,12 +1,12 @@
 package backend.repository
 
 import com.inventy.plugins.DatabaseFactory.Companion.dbQuery
+import kotlinx.datetime.Instant
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.select
-import java.time.Instant
 
 
 enum class WorkshopRegistrationState {

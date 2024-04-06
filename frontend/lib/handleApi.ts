@@ -23,7 +23,7 @@ export const handleAPI = withApiAuthRequired(async function handleAPI(
 });
 
 const getPathAndBody = async (req: NextRequest) => {
-  const path = req.nextUrl.pathname.replace("/api/inventy/", "");
+  const path = req.nextUrl.pathname.replace("/api/backend/", "");
   const body = req.body ? JSON.stringify(await req.json()) : undefined;
   const method = req.method;
   return { path, body, method };

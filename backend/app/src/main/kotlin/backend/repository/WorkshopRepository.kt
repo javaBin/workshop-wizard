@@ -2,13 +2,11 @@ package backend.repository
 
 import backend.dto.WorkshopDTO
 import com.inventy.plugins.DatabaseFactory.Companion.dbQuery
-import kotlinx.serialization.Contextual
+import kotlinx.datetime.Instant
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.Instant
 
 class Workshop(
     override val id: Int,
