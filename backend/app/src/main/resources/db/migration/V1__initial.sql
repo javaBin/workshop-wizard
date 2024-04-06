@@ -19,8 +19,12 @@ create table provider
     provider_type varchar,
     provider_id varchar,
 
-    constraint fk_provider_user foreign key (user_id) references users (id)
+    constraint provider_fk_user foreign key (user_id) references users (id)
 );
+
+INSERT INTO provider (user_id, provider_type, provider_id)
+VALUES
+    ('1', 'google', '123');
 
 create table workshop
 (
@@ -42,17 +46,17 @@ VALUES
     ('Building a fishy cloud datawarehouse in 2023', 'At Br Karlsen we make, buy and sell fish of all kinds, here are our experience in deploying the modern data stack , built on Airbyte, dbt , BigQuery and Apache Superset. Why we chose the components we did, and what our experience has been. When did we choose the managed version vs the open source version of a product? ', '2023-09-07T15:40', '2023-09-07T16:25', 30);
 
 
-
 create table workshop_registration
 (
     id          int GENERATED ALWAYS AS IDENTITY primary key,
     user_id     int,
     workshop_id int,
-    state       varchar
+    state       varchar,
     created_at  timestamp with time zone not null default current_timestamp,
     updated_at  timestamp with time zone not null default current_timestamp,
-    constraint fk_workshop foreign key (workshop_id) references workshop (id),
-    constraint fk_user foreign key (user_id) references users (id)
+
+    constraint workshop_registration_fk_workshop foreign key (workshop_id) references workshop (id),
+    constraint workshop_registration_fk_user foreign key (user_id) references users (id)
 );
 
 INSERT INTO workshop_registration (user_id, workshop_id, state, created_at, updated_at)

@@ -1,6 +1,7 @@
 package backend.config
 
 import backend.repository.AdminRepository
+import backend.repository.ProviderRepository
 import backend.repository.UserRepository
 import backend.repository.WorkshopRepository
 import backend.route.*
@@ -11,10 +12,11 @@ import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     val userRepository = UserRepository()
+    val providerRepository = ProviderRepository()
     val adminRepository = AdminRepository()
     val workshopRepository = WorkshopRepository()
 
-    configureAuth0Route(userRepository)
+    configureAuth0Route(userRepository, providerRepository)
     configureUserRoutes(userRepository)
     configureWorkshopRoutes(workshopRepository)
     configureAdminRoutes(adminRepository)

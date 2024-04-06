@@ -1,6 +1,5 @@
 package backend.repository
 
-import backend.config.TestData
 import backend.dto.UserDTO
 import com.inventy.plugins.DatabaseFactory.Companion.dbQuery
 import org.jetbrains.exposed.dao.id.IntIdTable
@@ -40,8 +39,6 @@ class User(
 }
 
 class UserRepository{
-    val userMap = TestData.userMap
-
     internal object UserTable : IntIdTable() {
         val firstName = varchar("first_name", 256)
         val lastName = varchar("last_name", 256)

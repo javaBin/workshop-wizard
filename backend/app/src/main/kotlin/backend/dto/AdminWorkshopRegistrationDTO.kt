@@ -1,6 +1,6 @@
 package backend.dto
 
-import backend.model.WorkshopRegistrationState
+import backend.repository.WorkshopRegistrationState
 import kotlinx.serialization.Serializable
 
 @Serializable

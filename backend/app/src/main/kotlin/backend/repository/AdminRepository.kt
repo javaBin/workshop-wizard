@@ -1,13 +1,6 @@
 package backend.repository
 
-import backend.config.TestData
-import backend.dto.AdminWorkshopDTO
-import backend.dto.AdminWorkshopRegistrationDTO
-
 class AdminRepository {
-    val userMap = TestData.userMap
-    val registrationMap = TestData.registrationMap
-    val workshopMap = TestData.workshopMap
 /*
     fun getWorkshops(): List<AdminWorkshopDTO> {
         return workshopMap.map { workshop ->
