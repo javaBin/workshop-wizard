@@ -11,3 +11,11 @@ To start the application: Go to the backend folder and `gradle app:run` or run i
 
 ### Frontend
 TBD
+
+
+### TODO
+- [ ] Finish workshop endpoint
+- [ ] Add and finish user endpoint
+- [ ] Add and Finish registration endpoint
+- [ ] Add and Finish cancellation endpoint
+- [ ] Finish workshop wizard

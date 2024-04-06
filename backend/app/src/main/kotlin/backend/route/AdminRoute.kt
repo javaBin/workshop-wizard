@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Routing.adminRoutes(adminRepository: AdminRepository, userRepository: UserRepository) {
+    /*
     get("/admin/workshop") {
         call.respond(adminRepository.getWorkshops())
     }
@@ -19,5 +20,5 @@ fun Routing.adminRoutes(adminRepository: AdminRepository, userRepository: UserRe
     }
     get("/admin/user") {
         call.respond(userRepository.getUsers())
-    }
+    }*/
 }
