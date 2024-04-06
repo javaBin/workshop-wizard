@@ -17,4 +17,5 @@ database:
 
 auth0:
   issuer: 'https://damoad.eu.auth0.com/'
-  audience: workshop-wizard
+  # The audience is the identifier of the API that you want to call (client-id of the application in Auth0)
+  audience: OEymhO5ditl1CiiMStu18WgoquU93JJF

@@ -32,6 +32,7 @@ dependencies {
     val postgres_version = "42.7.1"
     val exposed_version = "0.41.1"
     val h2_version = "2.1.214"
+    val kotlinx_datetime_version = "0.2.1"
 
     // Use the Kotlin JUnit 5 integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -82,6 +83,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
     implementation("com.github.seratch:kotliquery:1.9.0")
 
+    // Datetime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime_version")
+
 
     // Database
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core - database migrations
@@ -89,6 +93,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:$flyway_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("com.h2database:h2:$h2_version")
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP - connection pooling
     implementation("com.zaxxer:HikariCP:$hikari_version")

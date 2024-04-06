@@ -5,9 +5,12 @@ import backend.route.adminRoutes
 import backend.route.userRoutes
 import backend.repository.AdminRepository
 import backend.repository.UserRepository
+import backend.repository.WorkshopRepository
+import backend.route.workshopRoute
 import com.inventy.plugins.DatabaseFactory
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -33,6 +36,7 @@ fun Application.module() {
 fun Application.configureRouting() {
     val userRepository = UserRepository()
     val adminRepository = AdminRepository()
+    val workshopRepository = WorkshopRepository()
 
     install(ContentNegotiation) {
         json()
@@ -40,7 +44,14 @@ fun Application.configureRouting() {
     routing {
         userRoutes(userRepository)
         adminRoutes(adminRepository, userRepository)
+        workshopRoute(workshopRepository)
         healthz()
+
+        authenticate ("auth0-user") {
+            get("/auth") {
+                call.respondText("Hello, world!")
+            }
+        }
 
         get {
             call.respondText("Hello, world!")

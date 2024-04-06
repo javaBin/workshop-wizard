@@ -8,7 +8,7 @@ class AdminRepository {
     val userMap = TestData.userMap
     val registrationMap = TestData.registrationMap
     val workshopMap = TestData.workshopMap
-
+/*
     fun getWorkshops(): List<AdminWorkshopDTO> {
         return workshopMap.map { workshop ->
             val registrations =
@@ -41,4 +41,5 @@ class AdminRepository {
                 }
         return AdminWorkshopDTO(workshop.title, workshop.teacherName, registrations)
     }
+    */
 }

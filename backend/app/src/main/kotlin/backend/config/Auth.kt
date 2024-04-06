@@ -15,12 +15,13 @@ fun Application.configureAuth() {
         val containsAudience = credential.payload.audience.contains(environment.config.property("auth0.audience").getString())
 
         if (containsAudience) {
-            val userRepository = UserRepository()
+            return CustomPrincipal(credential.payload, 1)
+            /*val userRepository = UserRepository()
 
             val subject = credential.payload.subject
             val providerId = subject.split("|")[1]
             val provider = userRepository.findProviderById(providerId) ?: throw Exception("Provider not found")
-            return CustomPrincipal(credential.payload, provider.userId)
+            return CustomPrincipal(credential.payload, provider.userId)*/
         }
 
         return null
@@ -33,7 +34,11 @@ fun Application.configureAuth() {
         .build()
 
     install(Authentication) {
-        jwt("auth0") {
+        jwt("auth0-user") {
+            verifier(jwkProvider, issuer)
+            validate { credential -> validateCreds(credential) }
+        }
+        jwt("auth0-admin") {
             verifier(jwkProvider, issuer)
             validate { credential -> validateCreds(credential) }
         }
