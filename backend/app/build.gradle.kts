@@ -30,7 +30,7 @@ dependencies {
     val flyway_version = "10.6.0"
     val hikari_version = "5.1.0"
     val postgres_version = "42.7.1"
-    val exposed_version = "0.41.1"
+    val exposed_version = "0.49.0"
     val h2_version = "2.1.214"
     val kotlinx_datetime_version = "0.2.1"
 

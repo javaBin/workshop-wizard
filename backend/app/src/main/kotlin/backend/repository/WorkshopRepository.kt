@@ -1,5 +1,6 @@
 package backend.repository
 
+import backend.dto.SpeakerDTO
 import backend.dto.WorkshopDTO
 import backend.dto.WorkshopImport
 import backend.dto.WorkshopListImportDTO
@@ -9,35 +10,44 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
-class Workshop(
-    override val id: Int,
-    val external_id: String,
+data class Workshop(
+    val id: String,
     val title: String,
     val description: String,
     val startTime: Instant,
     val endTime: Instant,
-    val capacity: Int = 30
-) : Model {
-    fun toDTO() = WorkshopDTO(title, description, startTime, endTime, capacity)
+    val capacity: Int,
+    val active: Boolean
+) {
+    fun toDTO(speakerDTOS: List<SpeakerDTO>?) = WorkshopDTO(title, description, startTime, endTime, capacity, active, speakerDTOS ?: listOf())
 }
 
 class WorkshopRepository {
-    internal object WorkshopTable : IntIdTable() {
-        val external_id = varchar("external_id", 64)
-        val title = varchar("title", 264)
-        val description = varchar("description", 256)
+
+    companion object {
+        private const val WORKSHOP_CAPACITY = 30
+    }
+
+    internal object WorkshopTable : Table() {
+
+        val id = varchar("id", 64)
+        val title = varchar("title", 256)
+        val description = varchar("description", 2048)
         val startTime = timestamp("start_time")
         val endTime = timestamp("end_time")
         val capacity = integer("capacity")
+        val active = bool("active")
+
+        override val primaryKey = PrimaryKey(arrayOf(id), "id")
 
         fun toModel(it: ResultRow) = Workshop(
-            id = it[id].value,
-            external_id = it[external_id],
+            id = it[id],
             title = it[title],
             description = it[description],
             startTime = it[startTime],
             endTime = it[endTime],
             capacity = it[capacity],
+            active = it[active],
         )
     }
 
@@ -46,27 +56,46 @@ class WorkshopRepository {
             .map(WorkshopTable::toModel)
     }
 
-    suspend fun create(workshop: WorkshopImport) = dbQuery {
-        WorkshopTable.insert {
-            it[external_id] = workshop.id
-            it[title] = workshop.title
-            it[description] =
-                workshop.abstract.take(250) + if (workshop.abstract.length > 250) " ..." else "" // Todo change to varchar 2000?
-            it[startTime] = Instant.parse(workshop.startTimeZulu)
-            it[endTime] = Instant.parse(workshop.endTimeZulu)
-            it[capacity] = 30
-        }
-    }
 
-    suspend fun create(workshops: WorkshopListImportDTO) = dbQuery {
-        WorkshopTable.batchInsert(workshops.sessions) { workshop ->
-            this[WorkshopTable.external_id] = workshop.id
+    private suspend fun upsertActive(workshops: List<WorkshopImport>) = dbQuery {
+        WorkshopTable.batchUpsert(workshops) { workshop ->
+            this[WorkshopTable.id] = workshop.id
             this[WorkshopTable.title] = workshop.title
             this[WorkshopTable.description] =
                 workshop.abstract.take(250) + if (workshop.abstract.length > 250) " ..." else ""
             this[WorkshopTable.startTime] = Instant.parse(workshop.startTimeZulu)
             this[WorkshopTable.endTime] = Instant.parse(workshop.endTimeZulu)
-            this[WorkshopTable.capacity] = 30 // Or use the actual capacity if available
+            this[WorkshopTable.capacity] = WORKSHOP_CAPACITY
+            this[WorkshopTable.active] = true
+        }
+    }
+
+    private suspend fun upsert(workshops: List<Workshop>) = dbQuery {
+        WorkshopTable.batchUpsert(workshops) { workshop ->
+            this[WorkshopTable.id] = workshop.id
+            this[WorkshopTable.title] = workshop.title
+            this[WorkshopTable.description] = workshop.description
+            this[WorkshopTable.startTime] = workshop.startTime
+            this[WorkshopTable.endTime] = workshop.endTime
+            this[WorkshopTable.capacity] = WORKSHOP_CAPACITY
+            this[WorkshopTable.active] = workshop.active
+        }
+    }
+
+    private suspend fun setWorkshopsToDisabled(activeWorkshops: List<WorkshopImport>) {
+        val activeWorkshopsIds = activeWorkshops.map { it.id }
+        val allDisabledList = list()
+            .filterNot { it.id in activeWorkshopsIds }
+            .map { it.copy(active = false) }
+        val t = upsert(allDisabledList)
+    }
+
+    suspend fun update(workshops:  List<WorkshopImport>) {
+
+        dbQuery {
+            setWorkshopsToDisabled(workshops)
+            upsertActive(workshops)
+
         }
     }
 }

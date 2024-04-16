@@ -1,6 +1,7 @@
 package backend.config
 
 import backend.repository.AdminRepository
+import backend.repository.SpeakerRepository
 import backend.repository.UserRepository
 import backend.repository.WorkshopRepository
 import backend.route.*
@@ -13,10 +14,11 @@ fun Application.configureRouting() {
     val userRepository = UserRepository()
     val adminRepository = AdminRepository()
     val workshopRepository = WorkshopRepository()
+    val speakerRepository = SpeakerRepository()
 
     configureAuth0Route(userRepository)
     configureUserRoutes(userRepository)
-    configureWorkshopRoutes(workshopRepository)
+    configureWorkshopRoutes(workshopRepository, speakerRepository)
     configureAdminRoutes(adminRepository)
     configureApiRoutes()
 
