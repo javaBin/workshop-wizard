@@ -20,6 +20,4 @@ fun Application.module() {
     ).init()
     configureAuth()
     configureRouting()
-
-    startWorkshopDatabaseUpdateTask()
 }
