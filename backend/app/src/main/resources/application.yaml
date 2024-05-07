@@ -14,6 +14,10 @@ database:
   user: workshop
   password: workshop
 
+workshopDatabase:
+  workshopDataUrl: 'https://sleepingpill.javazone.no/public/allSessions/javazone_2023'
+  workshopDataUpdateIntervalMinutes: 1
+
 
 auth0:
   issuer: 'https://test-javabin.eu.auth0.com/'
