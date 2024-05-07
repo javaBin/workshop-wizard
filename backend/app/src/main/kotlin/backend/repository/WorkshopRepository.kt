@@ -3,10 +3,9 @@ package backend.repository
 import backend.dto.SpeakerDTO
 import backend.dto.WorkshopDTO
 import backend.dto.WorkshopImport
-import backend.dto.WorkshopListImportDTO
+import backend.util.TimeUtil
 import com.inventy.plugins.DatabaseFactory.Companion.dbQuery
 import kotlinx.datetime.Instant
-import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
@@ -19,7 +18,15 @@ data class Workshop(
     val capacity: Int,
     val active: Boolean
 ) {
-    fun toDTO(speakerDTOS: List<SpeakerDTO>?) = WorkshopDTO(title, description, startTime, endTime, capacity, active, speakerDTOS ?: listOf())
+    fun toDTO(speakerDTOS: List<SpeakerDTO>?) = WorkshopDTO(
+        title = title,
+        description = description,
+        startTime = TimeUtil.toGmtPlus2(startTime),
+        endTime = TimeUtil.toGmtPlus2(endTime),
+        capacity = capacity,
+        active = active,
+        speakers = speakerDTOS ?: listOf()
+    )
 }
 
 class WorkshopRepository {
@@ -90,7 +97,7 @@ class WorkshopRepository {
         val t = upsert(allDisabledList)
     }
 
-    suspend fun update(workshops:  List<WorkshopImport>) {
+    suspend fun update(workshops: List<WorkshopImport>) {
 
         dbQuery {
             setWorkshopsToDisabled(workshops)

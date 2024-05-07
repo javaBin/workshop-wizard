@@ -10,7 +10,8 @@ create table "user"
 
 INSERT INTO "user" (first_name, last_name, email, is_admin)
 VALUES
-    ('Daud', 'Mohamed', 'daud.mohamed.adam@gmail.com', true);
+    ('Daud', 'Mohamed', 'daud.mohamed.adam@gmail.com', true),
+    ('Joakim', 'Valand', 'joakim.valand@gmail.com', true);
 
 create table workshop
 (

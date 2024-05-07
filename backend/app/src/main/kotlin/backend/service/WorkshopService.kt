@@ -1,6 +1,7 @@
 package backend.service
 
 import backend.config.defaultClient
+import backend.dto.WorkshopDTO
 import backend.dto.WorkshopListImportDTO
 import backend.repository.Speaker
 import backend.repository.SpeakerRepository
@@ -12,14 +13,22 @@ import io.ktor.client.request.*
 import io.ktor.server.config.*
 import org.slf4j.LoggerFactory
 
-class WorkshopService(private val config: ApplicationConfig) {
+class WorkshopService(
+    private val config: ApplicationConfig,
+    private val workshopRepository: WorkshopRepository,
+    private val speakerRepository: SpeakerRepository
+) {
     private val log = LoggerFactory.getLogger(WorkshopService::class.java)
 
+
+    suspend fun getWorkshops(): List<WorkshopDTO> {
+        val speakers = speakerRepository.list()
+            .groupBy({ it.workshopId }, { it.toDTO() })
+
+        return workshopRepository.list().map { it.toDTO(speakers[it.id]) }
+    }
+
     suspend fun workshopDatabaseUpdate() {
-
-        val workshopRepository = WorkshopRepository()
-        val speakerRepository = SpeakerRepository()
-
         val client = HttpClient {
             defaultClient()
         }
@@ -35,7 +44,6 @@ class WorkshopService(private val config: ApplicationConfig) {
             workshopRepository.update(response.sessions)
             speakerRepository.replace(speakers)
         }
-
     }
 
     private fun extractSpeakers(response: WorkshopListImportDTO): List<Speaker> {
